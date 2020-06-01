@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/devel/lib/jiggle/process_bag",
-            "args": [],
+            "args": ["${workspaceFolder}/src/tu-darmstadt-ros-pkg-dataset_backup/Team_Hector_MappingBox_Dagstuhl_Neubau.bag"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

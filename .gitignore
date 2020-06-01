@@ -1,0 +1,7 @@
+devel
+devel_release
+build
+build_release
+logs
+logs_release
+.catkin_tools

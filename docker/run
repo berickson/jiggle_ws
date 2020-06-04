@@ -1,0 +1,3 @@
+#!/bin/sh
+#docker run -it --cpu-shares 512 --rm -w /root/lidar_ws -v ~/lidar_ws:/root/lidar_ws brianerickson/ros bash
+docker run -it --cpu-shares 512 --rm -w /root/lidar_ws -v ~/lidar_ws:/root/lidar_ws brianerickson/ros bash

@@ -19,6 +19,5 @@ BAG=Team_Hector_MappingBox_Dagstuhl_Neubau.bag
 time rosrun jiggle process_bag $BAGPATH$BAG 991000 > out.csv
 
 
-echo "done processing bag, launching Calc"
-
-soffice --calc out.csv &
+#echo "done processing bag, launching Calc"
+#soffice --calc out.csv &

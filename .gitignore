@@ -2,6 +2,7 @@ devel
 devel_release
 build
 build_release
+data
 logs
 logs_release
 .catkin_tools

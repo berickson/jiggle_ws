@@ -5,4 +5,5 @@ build_release
 data
 logs
 logs_release
+out.csv
 .catkin_tools

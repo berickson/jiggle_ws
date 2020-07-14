@@ -7,11 +7,12 @@ if [ $? -ne 0 ]; then
 fi
 echo "running process_bag"
 
-BAGPATH=src/tu-darmstadt-ros-pkg-dataset_backup/
+#BAGPATH=src/tu-darmstadt-ros-pkg-dataset_backup/
+BAGPATH=/home/brian/lidar_ws/
 
 # uncomment one of below to select gag
-
-BAG=Team_Hector_MappingBox_Dagstuhl_Neubau.bag
+BAG=around-bar-3-x-2020-06-04-16-46-44.bag
+#BAG=Team_Hector_MappingBox_Dagstuhl_Neubau.bag
 #BAG=Team_Hector_MappingBox_L101_Building.bag
 #BAG=Team_Hector_MappingBox_RoboCup_2011_Rescue_Arena.bag
 #BAG=Team_Hector_MappingBox_RoboCupGermanOpen2011_Arena.bag

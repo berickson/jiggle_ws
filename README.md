@@ -5,6 +5,12 @@ Docker images are supplied to build and run the projects. Local folders are mapp
 Can either connect to live lidar or test using pre-recorded lidar sessions from ROS bag files.
 
 ## Hacking
+this project uses git submodules, to clone
+```bash
+git clone git@github.com:berickson/jiggle_ws.git
+cd jiggle_ws
+git submodule update --init --recursive
+```
 
 build the berickson/ros docker image
 ```bash
@@ -21,7 +27,7 @@ from the docker terminal, start roscore
 source devel/setup.bash
 roscore
 ```
-from host machine, you can launch more terminals to build and run modules
+from host machine, you can launch more docker terminals to build and run modules
 ```bash
 cd docker
 ./terminal

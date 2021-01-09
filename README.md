@@ -1,6 +1,8 @@
-This workspace is the ROS workspace for use with Jiggle SLAM
+ROS workspace for building and testing Jiggle SLAM
 
 Docker images are supplied to build and run the projects. Local folders are mapped to expose github project contents within the docker images.
+
+Can either connect to live lidar or test using pre-recorded lidar sessions from ROS bag files.
 
 ## Hacking
 
@@ -26,7 +28,7 @@ cd docker
 ```
 build from docker terminal
 ```bash
-cd source
+cd src
 catkin build
 ```
 run jiggle slam against back yard bag file (from docker terminal)

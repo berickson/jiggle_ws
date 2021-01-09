@@ -66,5 +66,6 @@
         "typeinfo": "cpp",
         "dense": "cpp",
         "csignal": "cpp"
-    }
+    },
+    "ros.distro": "melodic"
 }

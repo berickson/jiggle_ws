@@ -1,89 +1,27 @@
 {
-  "layout": {
-    "direction": "row",
-    "first": "Plot!8crruh",
-    "second": {
-      "direction": "row",
-      "first": "3D Panel!3ipk7ir",
-      "second": {
-        "direction": "row",
-        "first": "3D Panel!1bkpp87",
-        "second": "RawMessages!48wvnv5",
-        "splitPercentage": 65.79648375066597
-      },
-      "splitPercentage": 28.2898241875333
-    }
-  },
+  "layout": "3D Panel!1crx526",
   "savedProps": {
-    "3D Panel!3ipk7ir": {
+    "3D Panel!1crx526": {
       "checkedKeys": [
-        "t:/scan",
-        "name:Topics"
-      ],
-      "expandedKeys": [
-        "t:/tf",
-        "name:Topics"
-      ],
-      "followTf": "neato_laser",
-      "cameraState": {
-        "distance": 75,
-        "perspective": false,
-        "phi": 0.7853981633974483,
-        "targetOffset": [
-          0,
-          0,
-          0
-        ],
-        "thetaOffset": 0,
-        "fovy": 0.7853981633974483,
-        "near": 0.01,
-        "far": 5000
-      },
-      "modifiedNamespaceTopics": [],
-      "pinTopics": false,
-      "settingsByKey": {},
-      "autoSyncCameraState": false,
-      "topicDisplayMode": "SHOW_ALL",
-      "followOrientation": false
-    },
-    "3D Panel!1bkpp87": {
-      "checkedKeys": [
-        "t:/cloud_nodelet/parameter_descriptions",
-        "t:/cloud_nodelet/parameter_updates",
-        "t:/diagnostics",
-        "t:/diagnostics_agg",
-        "t:/diagnostics_toplevel_state",
-        "t:/gps/fix",
-        "t:/gps/rtkfix",
-        "t:/gps/time",
-        "t:/image_raw",
-        "t:/obs1/gps/fix",
-        "t:/obs1/gps/rtkfix",
-        "t:/obs1/gps/time",
-        "t:/radar/range",
-        "t:/radar/tracks",
-        "t:/rosout",
-        "t:/tf",
-        "t:/velodyne_nodelet_manager/bond",
-        "t:/velodyne_packets",
-        "t:/velodyne_points",
         "name:Topics",
-        "t:/scan"
+        "t:/untwisted_scan2",
+        "t:/map_cloud"
       ],
       "expandedKeys": [
-        "name:Topics"
+        "name:Topics",
+        "t:/tf"
       ],
-      "followTf": "neato_laser",
+      "followTf": "map",
       "cameraState": {
         "targetOffset": [
-          0.245765325748609,
-          -1.8548831958141703,
+          -0.015492380368246727,
+          -0.0009965991452548098,
           0
         ],
-        "distance": 14.104939913924513,
-        "perspective": false,
-        "phi": 0.01929260450160772,
-        "thetaOffset": 1.2221678899124908,
+        "distance": 29.03063185281523,
+        "perspective": true,
+        "phi": 0.01362088535754824,
+        "thetaOffset": -0.06423982869379012,
         "fovy": 0.7853981633974483,
         "near": 0.01,
         "far": 5000
@@ -91,52 +29,32 @@
       "modifiedNamespaceTopics": [],
       "pinTopics": true,
       "settingsByKey": {
-        "t:/velodyne_points": {
-          "colorField": "ring",
-          "pointSize": 4,
-          "pointShape": "square",
+        "t:/map_cloud": {
           "colorMode": {
-            "mode": "gradient",
-            "colorField": "intensity",
-            "minValue": 0,
-            "maxValue": 6,
-            "minColor": "255,0,0,1",
-            "maxColor": "168,174,238,1"
-          }
+            "mode": "flat",
+            "flatColor": {
+              "r": 0.3254901960784314,
+              "g": 1,
+              "b": 0,
+              "a": 0.5
+            }
+          },
+          "pointShape": "circle",
+          "pointSize": 1
         }
       },
       "autoSyncCameraState": false,
-      "followOrientation": false
-    },
-    "RawMessages!48wvnv5": {
-      "topicPath": "/scan",
-      "diffTopicPath": "",
-      "diffMethod": "custom",
-      "diffEnabled": false,
-      "showFullMessageForDiff": false,
-      "topicName": "/radar/tracks",
-      "diffTopicName": ""
-    },
-    "Plot!8crruh": {
-      "paths": [
-        {
-          "value": "/scan.time_increment",
-          "enabled": true,
-          "timestampMethod": "headerStamp"
-        }
-      ],
-      "minYValue": "-0",
-      "maxYValue": "0.002",
-      "showLegend": true,
-      "xAxisVal": "timestamp"
+      "autoTextBackgroundColor": true,
+      "topicDisplayMode": "SHOW_AVAILABLE",
+      "followOrientation": true
     }
   },
   "globalVariables": {},
   "userNodes": {},
   "linkedGlobalVariables": [],
   "playbackConfig": {
-    "speed": 0.5,
-    "messageOrder": "headerStamp"
+    "speed": 1,
+    "messageOrder": "receiveTime"
   },
-  "version": 5
+  "version": 16
 }

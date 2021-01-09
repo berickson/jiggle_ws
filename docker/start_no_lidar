@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -it --rm -w /root/lidar_ws --name car -v ~/lidar_ws:/root/lidar_ws brianerickson/ros bash

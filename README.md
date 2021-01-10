@@ -39,7 +39,7 @@ catkin build
 ```
 run jiggle slam against back yard bag file (from docker terminal)
 ```
-rosrun jiggle process_bag data/a3-back-yard-2020-07-14-21-40-47.bag
+time rosrun jiggle process_bag data/a3-lab-bar-kitchen-2020-07-14-21-38-09.bag
 # results will be in data/a3-back-yard-2020-07-14-21-40-47.bag.out.bag
 ```
 view bag results in webviz (from host machine browser)

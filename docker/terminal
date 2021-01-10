@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -ti car bash -c "source devel/setup.bash && bash"
+docker exec -ti car bash -c "source devel_release/setup.bash && bash"

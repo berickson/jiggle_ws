@@ -14,13 +14,11 @@ git submodule update --init --recursive
 
 build the berickson/ros docker image
 ```bash
-cd docker
-./build
+docker/build
 ```
 launch the docker image
 ```bash
-cd docker
-./start_no_lidar # or./start if running with lidar
+docker/start_no_lidar # or./start if running with lidar
 ```
 from the docker terminal, start roscore
 ```bash
@@ -29,8 +27,7 @@ roscore
 ```
 from host machine, you can launch more docker terminals to build and run modules
 ```bash
-cd docker
-./terminal
+docker/terminal
 ```
 build from docker terminal
 ```bash

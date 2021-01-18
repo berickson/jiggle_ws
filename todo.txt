@@ -1,0 +1,6 @@
+add docker scripts to streamline usage
+  docker/roscore       # starts roscore and runs in background
+  docker/process_bag   # processes a single test bag, maybe launching in webviz browser
+add environment variables for whether it is a car or local, maybe even bag path
+add documentation on how to run with a real car lidar
+jiggle live mode where it is a ros service (currently reads bag directly as fast as it can)

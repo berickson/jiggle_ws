@@ -33,6 +33,7 @@ build from docker terminal
 ```bash
 cd src
 catkin build
+cd ..
 ```
 run jiggle slam against back yard bag file (from docker terminal)
 ```

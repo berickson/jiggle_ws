@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -it --rm -w /root/jiggle_ws --name car -v ~/jiggle_ws:/root/jiggle_ws brianerickson/ros bash
+docker run -it --rm -w /root/jiggle_ws -p 9090:9090 --name car -v ~/jiggle_ws:/root/jiggle_ws brianerickson/ros bash

@@ -6,8 +6,6 @@ RUN apt-get update && apt-get install -y \
   # python3-catkin-tools \
   # python3-osrf-pycommon
 #RUN apt-get install -y \
-#  ros-noetic-hector-*
-#RUN apt-get install -y \
 #  ros-noetic-xv-11-laser-driver
 RUN apt-get update && apt-get install -y \
   ros-melodic-rosbridge-suite
@@ -15,3 +13,9 @@ RUN apt-get update && apt-get install -y \
 #  ros-melodic-rosbridge-suite
 RUN git clone https://github.com/RainerKuemmerle/g2o.git
 RUN cd g2o && mkdir build && cd build && cmake -j4 .. && make && make install
+RUN apt-get update && apt-get install -y \
+  python-catkin-tools
+RUN apt-get install -y \
+   ros-melodic-hector-*
+# because DeserializationError cannot deserialize: unknown error handler name 'rosmsg'
+RUN apt-get install ros-melodic-genpy   

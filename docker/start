@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -it --rm -w /root/lidar_ws --name car --device /dev/car-lidar -v ~/lidar_ws:/root/lidar_ws brianerickson/ros bash
+docker run -it --rm -w /root/lidar_ws --name car -p 9090:9090 --device /dev/car-controller --device /dev/car-lidar -v ~/lidar_ws:/root/lidar_ws brianerickson/ros bash

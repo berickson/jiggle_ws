@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(car_controller)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation)
+
+add_message_files(DIRECTORY msg FILES car_update.msg)
+generate_messages(DEPENDENCIES std_msgs)
 
 # this line must be before any executables are added
 catkin_package()

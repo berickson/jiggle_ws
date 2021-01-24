@@ -16,6 +16,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(car_controller car_controller.cpp)
+target_link_libraries(car_controller ${catkin_LIBRARIES})
+
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)

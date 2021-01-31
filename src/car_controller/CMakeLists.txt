@@ -16,7 +16,16 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(car_controller car_controller.cpp)
+add_executable(
+  car_controller 
+  car_controller.cpp 
+  diagnostics.cpp 
+  logger.cpp 
+  work-queue.cpp 
+  usb.cpp 
+  system.cpp 
+  string-utils.cpp)
+  
 target_link_libraries(car_controller ${catkin_LIBRARIES})
 
 

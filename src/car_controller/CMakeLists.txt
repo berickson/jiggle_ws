@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(car_controller)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation laser_geometry tf)
 
-add_message_files(DIRECTORY msg FILES car_update.msg)
+add_message_files(DIRECTORY msg FILES 
+  car_update.msg 
+  car_rc_command.msg
+)
+
 generate_messages(DEPENDENCIES std_msgs)
 
 # this line must be before any executables are added
@@ -25,8 +29,13 @@ add_executable(
   usb.cpp 
   system.cpp 
   string-utils.cpp)
-  
 target_link_libraries(car_controller ${catkin_LIBRARIES})
+
+add_executable(
+  scan_converter
+  scan_converter.cpp)
+target_link_libraries(scan_converter ${catkin_LIBRARIES})
+  
 
 
 ## Compile as C++11, supported in ROS Kinetic and newer

@@ -2,6 +2,8 @@
 #include "std_msgs/String.h"
 
 #include "car_controller/car_update.h"
+#include "car_controller/car_rc_command.h"
+
 
 #include <sstream>
 #include <thread>
@@ -45,7 +47,7 @@ bool get_dynamics_from_line(Dynamics2 &d, const StampedString& msg ) {
 
 void rc_command_callback(const car_controller::car_rc_command::ConstPtr& msg)
 {
-  ROS_INFO("command str_us: [%d] esc_us: [%d]", msg->data.str_us, msg->data.esc_us);
+  ROS_INFO("command str_us: [%d] esc_us: [%d]", msg->str_us, msg->esc_us);
 }
 
 
@@ -54,7 +56,8 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "car_controller");
   ros::NodeHandle n;
   ros::Publisher car_raw_pub = n.advertise<car_controller::car_update>("car_raw", 1000);
-  ros::Sub
+  ros::Subscriber sub = n.subscribe("car_rc", 2, rc_command_callback);
+  
   ros::Rate loop_rate(100);
   int count = 0;
   car_controller::car_update msg;
@@ -74,6 +77,7 @@ int main(int argc, char **argv)
     usb.run(device_path);
     
     while (ros::ok()) {
+      ros::spinOnce();
       try {
         static uint32_t processed_count = 0;
         StampedString line;

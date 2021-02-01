@@ -13,6 +13,7 @@
 #include "usb.h"
 #include "string-utils.h"
 #include "CarMessages.h"
+#include <sstream>
 
 Usb usb;
 WorkQueue<StampedString> usb_queue;
@@ -48,6 +49,10 @@ bool get_dynamics_from_line(Dynamics2 &d, const StampedString& msg ) {
 void rc_command_callback(const car_controller::car_rc_command::ConstPtr& msg)
 {
   ROS_INFO("command str_us: [%d] esc_us: [%d]", msg->str_us, msg->esc_us);
+  usb.write_line("rc");
+  std::stringstream ss;
+  ss << "pse " << msg->str_us << "," << msg->esc_us;
+  usb.write_line(ss.str());
 }
 
 

@@ -4,6 +4,7 @@ build
 build_release
 data
 logs
+bags
 logs_release
 out.csv
 .catkin_tools

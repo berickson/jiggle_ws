@@ -8,11 +8,12 @@
             "includePath": [
                 "/opt/ros/melodic/include/**",
                 "/usr/include/**",
-                "/usr/include/eigen3"
+                "/usr/include/eigen3",
+                "${workspaceFolder}/devel/.private/car/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
             "cppStandard": "c++14"
         }

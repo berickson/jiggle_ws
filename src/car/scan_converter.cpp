@@ -19,9 +19,10 @@ class My_Filter {
 };
 
 My_Filter::My_Filter(){
-        scan_sub_ = node_.subscribe<sensor_msgs::LaserScan> ("/scan", 100, &My_Filter::scanCallback, this);
-        point_cloud_publisher_ = node_.advertise<sensor_msgs::PointCloud2> ("/cloud", 100, false);
-        tfListener_.setExtrapolationLimit(ros::Duration(0.1));
+    const int queue_length = 1; // ensure we only process the latest message
+    scan_sub_ = node_.subscribe<sensor_msgs::LaserScan> ("/scan", queue_length, &My_Filter::scanCallback, this);
+    point_cloud_publisher_ = node_.advertise<sensor_msgs::PointCloud2> ("/cloud", 100, false);
+    tfListener_.setExtrapolationLimit(ros::Duration(0.1));
 }
 
 void My_Filter::scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan){

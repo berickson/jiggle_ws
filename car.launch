@@ -1,6 +1,7 @@
 <launch>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
-  <node name="car_controller"          pkg="car_controller"  type="car_controller" output="screen">
-  <param name="serial_port"         type="string" value="/dev/car-controller"/>  
+  <node name="car_controller"          pkg="car"  type="car_controller" output="screen">
+    <param name="serial_port"         type="string" value="/dev/car-controller"/>
   </node>
+  <node name="car_instruments"          pkg="car"  type="car_instruments" output="screen"/>
 </launch>

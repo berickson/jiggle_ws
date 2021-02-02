@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>car</name>
+  <name>car_msgs</name>
   <version>0.0.0</version>
   <description>To control and RC car.</description>
 
@@ -8,8 +8,6 @@
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="berickson@gmail.com">Brian Erickson</maintainer>
-  <build_depend>car_msgs</build_depend>
-  <exec_depend>car_msgs</exec_depend>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->

@@ -1,54 +1,17 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(car)
-find_package(catkin REQUIRED COMPONENTS roscpp car_msgs rospy std_msgs message_generation laser_geometry tf)
+project(car_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation laser_geometry tf)
 
-#add_message_files(DIRECTORY msg FILES 
-#  car_update.msg 
-#  car_rc_command.msg
-#  car_speedometer.msg
-#)
+add_message_files(DIRECTORY msg FILES 
+  car_update.msg 
+  car_rc_command.msg
+  car_speedometer.msg
+)
 
-#generate_messages(DEPENDENCIES std_msgs)
-
-
+generate_messages(DEPENDENCIES std_msgs)
 
 # this line must be before any executables are added
 catkin_package()
-
-
-add_executable(talker talker.cpp)
-target_link_libraries(talker ${catkin_LIBRARIES})
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
-
-add_executable(
-  car_controller 
-  car_controller.cpp 
-  diagnostics.cpp 
-  logger.cpp 
-  work-queue.cpp 
-  usb.cpp 
-  system.cpp 
-  string-utils.cpp)
-target_link_libraries(car_controller ${catkin_LIBRARIES})
-add_dependencies(car_controller ${catkin_EXPORTED_TARGETS})
-
-
-add_executable(
-  scan_converter
-  scan_converter.cpp)
-target_link_libraries(scan_converter ${catkin_LIBRARIES})
-
-add_executable(
-  car_instruments
-  car_instruments.cpp
-  speedometer.cpp
-  kalman.cpp)
-target_link_libraries(car_instruments ${catkin_LIBRARIES})
-add_dependencies(car_instruments ${catkin_EXPORTED_TARGETS})
-
 
 
 ## Compile as C++11, supported in ROS Kinetic and newer

@@ -1,8 +1,8 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
-#include "car_controller/car_update.h"
-#include "car_controller/car_rc_command.h"
+#include "car_msgs/car_update.h"
+#include "car_msgs/car_rc_command.h"
 
 
 #include <sstream>
@@ -47,9 +47,9 @@ public:
     return stream.ok;
   }
 
-  void rc_command_callback(const car_controller::car_rc_command::ConstPtr& msg)
+  void rc_command_callback(const car_msgs::car_rc_command::ConstPtr& msg)
   {
-    ROS_DEBUG("command str_us: [%d] esc_us: [%d]", msg->str_us, msg->esc_us);
+    ROS_INFO("command str_us: [%d] esc_us: [%d]", msg->str_us, msg->esc_us);
     usb.write_line("rc");
     std::stringstream ss;
     ss << "pse " << msg->str_us << "," << msg->esc_us;
@@ -60,12 +60,13 @@ public:
   int run()
   {
     ros::NodeHandle n;
-    ros::Publisher car_raw_pub = n.advertise<car_controller::car_update>("car_raw", 1000);
-    ros::Subscriber sub = n.subscribe("car_rc", 2, &CarController::rc_command_callback, this);
+    ros::Publisher car_raw_pub = n.advertise<car_msgs::car_update>("car_raw", 1000);
+    const int sub_queue_length = 1; // ensure we only get latest message
+    ros::Subscriber sub = n.subscribe("car_rc", sub_queue_length, &CarController::rc_command_callback, this);
     
     ros::Rate loop_rate(100);
     int count = 0;
-    car_controller::car_update msg;
+    car_msgs::car_update msg;
 
     {
     try {
@@ -103,7 +104,7 @@ public:
             }
             Dynamics2 d;
             if(get_dynamics_from_line(d, line)) {
-              car_controller::car_update msg;
+              car_msgs::car_update msg;
               msg.header.stamp = ros::Time::now();
 
               msg.ms = d.ms;

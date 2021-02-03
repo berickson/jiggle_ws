@@ -6,5 +6,7 @@ data
 logs
 bags
 logs_release
+deleteme
+install
 out.csv
 .catkin_tools

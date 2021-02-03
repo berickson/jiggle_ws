@@ -14,10 +14,19 @@ RUN apt-get update && apt-get install -y \
   nano \
   python-catkin-tools
 
+#####################################
+
 RUN apt-get update && apt-get install -y \
   python-pip
 
-RUN pip install psutil
+RUN pip install psutil platformio
+
+RUN apt-get update && apt-get install -y \
+  ros-melodic-rosserial-arduino ros-melodic-rosserial-server ros-melodic-rosserial-python ros-melodic-rosserial-*
+  # ros-melodic-rosserial-embeddedlinux ros-kinetic-rosserial-windows ros-kinetic-rosserial-server ros-kinetic-rosserial-python
+
+#
+######################################
 
 #RUN apt-get install -y \
 #  ros-noetic-xv-11-laser-driver

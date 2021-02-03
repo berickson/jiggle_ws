@@ -1,8 +1,20 @@
 <launch>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+
+  <node pkg="rosserial_server" type="serial_node" name="rosserial_server" >
+  <param name="~port" value="/dev/car-controller" />
+  </node>
+  <node pkg="rosserial_python" type="message_info_service.py" name="rosserial_message_info" />
+
+<!--
+  <node pkg="rosserial_python" type="serial_node.py" name="rosserial_python">
+    <param name="port" value="/dev/car-controller" />
+    <param name="baud" value="250000" />
+  </node>
   <node name="car_controller"          pkg="car"  type="car_controller" output="screen">
     <param name="serial_port"         type="string" value="/dev/car-controller"/>
-  </node>
+  </node> 
+-->
   <node name="car_instruments"          pkg="car"  type="car_instruments" output="screen"/>
   <node name="cpu_monitor"          pkg="cpu_monitor"  type="monitor.py" output="screen"/>
 </launch>

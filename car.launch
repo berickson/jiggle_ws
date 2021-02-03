@@ -4,4 +4,5 @@
     <param name="serial_port"         type="string" value="/dev/car-controller"/>
   </node>
   <node name="car_instruments"          pkg="car"  type="car_instruments" output="screen"/>
+  <node name="cpu_monitor"          pkg="cpu_monitor"  type="monitor.py" output="screen"/>
 </launch>

@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 
-#include "car_msgs/car_update.h"
-#include "car_msgs/car_speedometer.h"
+#include "car_msgs/update.h"
+#include "car_msgs/speedometer.h"
 
 #include "speedometer.h"
 
@@ -10,7 +10,7 @@
 class CarInstruments {
      public:
         CarInstruments();
-        void car_update_callback(const car_msgs::car_update::ConstPtr& car_update);
+        void update_callback(const car_msgs::update::ConstPtr& update);
 
         Speedometer front_right_wheel_;
         Speedometer front_left_wheel_;
@@ -34,7 +34,7 @@ class CarInstruments {
         ros::Publisher fr_speedometer_publisher_;
         ros::Publisher motor_speedometer_publisher_;
 
-        ros::Subscriber car_update_sub_;
+        ros::Subscriber update_sub_;
 };
 
 CarInstruments::CarInstruments(){
@@ -43,14 +43,14 @@ CarInstruments::CarInstruments(){
     motor_.meters_per_tick = motor_meters_per_odometer_tick;
 
     bool latch = true;
-    fl_speedometer_publisher_ = node_.advertise<car_msgs::car_speedometer> ("/car/speedometers/fl", 10, latch);
-    fr_speedometer_publisher_ = node_.advertise<car_msgs::car_speedometer> ("/car/speedometers/fr", 10, latch);
-    motor_speedometer_publisher_ = node_.advertise<car_msgs::car_speedometer> ("/car/speedometers/motor", 10, latch);
+    fl_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fl", 10, latch);
+    fr_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fr", 10, latch);
+    motor_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/motor", 10, latch);
     const int queue_length=1; // 1 ensures latest message
-    car_update_sub_ = node_.subscribe<car_msgs::car_update> ("/car_raw", queue_length, &CarInstruments::car_update_callback, this);
+    update_sub_ = node_.subscribe<car_msgs::update> ("/car_raw", queue_length, &CarInstruments::update_callback, this);
 }
 
-void CarInstruments::car_update_callback(const car_msgs::car_update::ConstPtr& d){
+void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     // ROS_INFO("got car update ms: %d us: %d", d->ms, d->us);
     ++update_count_;
 
@@ -60,9 +60,9 @@ void CarInstruments::car_update_callback(const car_msgs::car_update::ConstPtr& d
     front_right_wheel_.update_from_sensor(d->us, d->odo_fr_a, d->odo_fr_a_us, 
                                          d->odo_fr_b, d->odo_fr_b_us);
 
-    fl_speedometer_publisher_.publish(front_left_wheel_.get_car_speedometer_message());
-    fr_speedometer_publisher_.publish(front_right_wheel_.get_car_speedometer_message());
-    motor_speedometer_publisher_.publish(motor_.get_car_speedometer_message());
+    fl_speedometer_publisher_.publish(front_left_wheel_.get_speedometer_message());
+    fr_speedometer_publisher_.publish(front_right_wheel_.get_speedometer_message());
+    motor_speedometer_publisher_.publish(motor_.get_speedometer_message());
 
 }
 

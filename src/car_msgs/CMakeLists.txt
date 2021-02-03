@@ -3,9 +3,9 @@ project(car_msgs)
 find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation laser_geometry tf)
 
 add_message_files(DIRECTORY msg FILES 
-  car_update.msg 
-  car_rc_command.msg
-  car_speedometer.msg
+  update.msg 
+  rc_command.msg
+  speedometer.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs)

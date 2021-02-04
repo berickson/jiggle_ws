@@ -16,8 +16,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp car_msgs rospy std_msgs message_g
 catkin_package()
 
 
-add_executable(talker talker.cpp)
-target_link_libraries(talker ${catkin_LIBRARIES})
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}

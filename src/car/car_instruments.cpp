@@ -47,7 +47,7 @@ CarInstruments::CarInstruments(){
     fr_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fr", 10, latch);
     motor_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/motor", 10, latch);
     const int queue_length=1; // 1 ensures latest message
-    update_sub_ = node_.subscribe<car_msgs::update> ("/car_raw", queue_length, &CarInstruments::update_callback, this);
+    update_sub_ = node_.subscribe<car_msgs::update> ("/car/update", queue_length, &CarInstruments::update_callback, this);
 }
 
 void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){

@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "ROS: Launch",
+            "type": "ros",
+            "request": "launch",
+            "target": "/root/lidar_ws/car.launch"
+        },
+        {
+            "name": "ROS: Attach",
+            "type": "ros",
+            "request": "attach"
+        },
+
+        {
             "name": "(gdb) launch",
             "type": "cppdbg",
             "request": "launch",

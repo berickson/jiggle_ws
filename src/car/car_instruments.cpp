@@ -46,7 +46,7 @@ CarInstruments::CarInstruments(){
     fl_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fl", 10, latch);
     fr_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fr", 10, latch);
     motor_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/motor", 10, latch);
-    const int queue_length=1; // 1 ensures latest message
+    const int queue_length=5; // 1 ensures latest message
     update_sub_ = node_.subscribe<car_msgs::update> ("/car/update", queue_length, &CarInstruments::update_callback, this);
 }
 
@@ -60,9 +60,17 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     front_right_wheel_.update_from_sensor(d->us, d->odo_fr_a, d->odo_fr_a_us, 
                                          d->odo_fr_b, d->odo_fr_b_us);
 
-    fl_speedometer_publisher_.publish(front_left_wheel_.get_speedometer_message());
+    auto fl = front_left_wheel_.get_speedometer_message();
+    fl.header = d->header;
+    fl_speedometer_publisher_.publish(fl);
+
+    auto fr = front_right_wheel_.get_speedometer_message();
+    fr.header = d->header;
     fr_speedometer_publisher_.publish(front_right_wheel_.get_speedometer_message());
-    motor_speedometer_publisher_.publish(motor_.get_speedometer_message());
+
+    auto motor = motor_.get_speedometer_message();
+    motor.header = d->header;
+    motor_speedometer_publisher_.publish(motor);
 
 }
 

@@ -8,8 +8,7 @@
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="berickson@gmail.com">Brian Erickson</maintainer>
-  <build_depend>car_msgs</build_depend>
-  <exec_depend>car_msgs</exec_depend>
+  <depend>car_msgs</depend>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->

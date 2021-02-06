@@ -22,13 +22,13 @@ include_directories(
 )
 
 add_executable(
-  car_controller 
-  car_controller.cpp 
-  diagnostics.cpp 
-  logger.cpp 
-  work-queue.cpp 
-  usb.cpp 
-  system.cpp 
+  car_controller
+  car_controller.cpp
+  diagnostics.cpp
+  logger.cpp
+  work-queue.cpp
+  usb.cpp
+  system.cpp
   string-utils.cpp)
 target_link_libraries(car_controller ${catkin_LIBRARIES})
 add_dependencies(car_controller ${catkin_EXPORTED_TARGETS})
@@ -41,9 +41,14 @@ target_link_libraries(scan_converter ${catkin_LIBRARIES})
 
 add_executable(
   car_instruments
+  ackermann.cpp
   car_instruments.cpp
+  geometry.cpp
+  kalman.cpp
+  lookup-table.cpp
   speedometer.cpp
-  kalman.cpp)
+  string-utils.cpp
+  )
 target_link_libraries(car_instruments ${catkin_LIBRARIES})
 add_dependencies(car_instruments ${catkin_EXPORTED_TARGETS})
 

@@ -4,6 +4,7 @@
 #include "car_msgs/speedometer.h"
 
 #include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include "geometry_msgs/PoseStamped.h"
 
@@ -164,7 +165,6 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     
     geometry_msgs::PoseStamped pose_msg;
 
-    //static tf2_ros::TransformBroadcaster br;
     Point rear_position = ackermann_.rear_position();
     
     pose_msg.header.stamp = ros::Time::now();
@@ -181,6 +181,23 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     pose_msg.pose.orientation.w = q.w();
 
     ackerman_fr_publisher_.publish(pose_msg);
+
+
+    geometry_msgs::TransformStamped tf_msg;
+
+    tf_msg.header.stamp = ros::Time::now();
+    tf_msg.header.frame_id = "world";
+    tf_msg.child_frame_id = "base_link";
+    tf_msg.transform.translation.x = rear_position.x;
+    tf_msg.transform.translation.y = rear_position.y;
+    tf_msg.transform.translation.z = 0.0;
+    tf_msg.transform.rotation.x = q.x();
+    tf_msg.transform.rotation.y = q.y();
+    tf_msg.transform.rotation.z = q.z();
+    tf_msg.transform.rotation.w = q.w();
+
+    static tf2_ros::TransformBroadcaster br;
+    br.sendTransform(tf_msg);
 
 
     last_fr_ = fr;

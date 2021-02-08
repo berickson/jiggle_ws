@@ -128,6 +128,8 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     ++update_count_;
 
     Angle yaw = Angle::degrees(d->mpu_deg_yaw);
+    Angle pitch = Angle::degrees(d->mpu_deg_pitch);
+    Angle roll = Angle::degrees(d->mpu_deg_roll);
 
     front_left_wheel_.update_from_sensor(d->us, d->odo_fl_a, d->odo_fl_a_us,
                                         d->odo_fl_b, d->odo_fl_b_us);
@@ -174,7 +176,7 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
     pose_msg.pose.position.y = rear_position.y;
     pose_msg.pose.position.z = 0.0;
     tf2::Quaternion q;
-    q.setRPY(0, 0, yaw.radians());
+    q.setRPY(roll.radians(), -pitch.radians(), yaw.radians());
     pose_msg.pose.orientation.x = q.x();
     pose_msg.pose.orientation.y = q.y();
     pose_msg.pose.orientation.z = q.z();

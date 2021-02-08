@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(car)
-find_package(catkin REQUIRED COMPONENTS roscpp car_msgs rospy std_msgs message_generation laser_geometry tf)
+find_package(catkin REQUIRED COMPONENTS roscpp car_msgs rospy std_msgs sensor_msgs message_generation laser_geometry tf)
 
 #add_message_files(DIRECTORY msg FILES 
 #  car_update.msg 

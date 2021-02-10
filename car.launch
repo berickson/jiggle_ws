@@ -9,7 +9,9 @@
   <node name="car_instruments"          pkg="car"  type="car_instruments" output="screen"/>
   <node name="jiggle_lidar_odom"  pkg="jiggle" type="lidar_odom" output="screen"/>
   
-  <node pkg="rosservice" type="rosservice" name="stop_motor" args="call --wait /stop_motor" /> 
+<!--   
+  <node pkg="rosservice" type="rosservice" name="stop_motor" args="call \-\-wait /stop_motor" />  
+-->
 
 <!--  
   static_transform_publisher x y z yaw pitch roll frame_id child_frame_id
@@ -20,11 +22,15 @@
   <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom_broadcaster" args="0 0 0 0 0 0  map odom" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_lidar_odom_broadcaster" args="0 0 0 0 0 0  map lidar_odom" />
 -->
-  <node pkg="car" type="odom_tracker" name="odom_tracker"/>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser_broadcaster" args="0.1524 0 0.254 3.04159 0 0  base_link laser" />
-  <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_odom_to_base_link_lidar_broadcaster" args="-0.1524 0 -0.254 -3.04159 0 0 lidar_odom lidar_base_link" />
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser_broadcaster" args="0.1524 0 0.254 3.04159 0 0  base_link laser" />
+-->  
+
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_odom_to_base_link_lidar_broadcaster" args="-0.1524 0 -0.254 -3.04159 0 0 lidar_odom_laser lidar_base_link" />  -->
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_odom_to_lidar_base_link_broadcaster" args="-0.1524 0 0.254 3.04159 0 0  lidar_odom_laser lidar_base_link " />
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.1524 0 0.254 3.04159 0 0  base_link laser" />
+  <node pkg="car" type="odom_tracker" name="odom_tracker"/>
 
   <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
     <param name="serial_port"         type="string" value="/dev/car-lidar"/>  

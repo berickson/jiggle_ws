@@ -24,7 +24,6 @@ class OdomTracker {
                     "odom",  
                     ros::Time(0));
 
-
                 odom_transform_.header.frame_id = "map";
                 odom_transform_.child_frame_id = "odom";
             }
@@ -34,10 +33,11 @@ class OdomTracker {
 
             try{
                 lidar_odom_transform_= tf_buffer_.lookupTransform(
-                    "map",
                     "lidar_base_link",
+                    "lidar_odom",
                     ros::Time(0)
                     );
+                lidar_odom_transform_.header.frame_id = "map";
                 lidar_odom_transform_.child_frame_id = "lidar_odom";
             }
             catch (tf::TransformException ex){

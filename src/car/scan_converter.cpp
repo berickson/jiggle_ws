@@ -9,7 +9,7 @@ class My_Filter {
      public:
         My_Filter();
         void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
-     private:
+     //private:
         ros::NodeHandle node_;
         laser_geometry::LaserProjection projector_;
         tf::TransformListener tfListener_;

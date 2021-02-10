@@ -2,13 +2,6 @@ cmake_minimum_required(VERSION 3.0.2)
 project(car)
 find_package(catkin REQUIRED COMPONENTS roscpp car_msgs rospy std_msgs sensor_msgs message_generation laser_geometry tf)
 
-#add_message_files(DIRECTORY msg FILES 
-#  car_update.msg 
-#  car_rc_command.msg
-#  car_speedometer.msg
-#)
-
-#generate_messages(DEPENDENCIES std_msgs)
 
 
 
@@ -17,21 +10,13 @@ catkin_package()
 
 
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
 )
 
 add_executable(
-  car_controller
-  car_controller.cpp
-  diagnostics.cpp
-  logger.cpp
-  work-queue.cpp
-  usb.cpp
-  system.cpp
-  string-utils.cpp)
-target_link_libraries(car_controller ${catkin_LIBRARIES})
-add_dependencies(car_controller ${catkin_EXPORTED_TARGETS})
+  odom_tracker
+  odom_tracker.cpp)
+target_link_libraries(odom_tracker ${catkin_LIBRARIES})
 
 
 add_executable(

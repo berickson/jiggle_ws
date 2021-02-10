@@ -28,7 +28,7 @@ public:
   double y;
   double heading;
 
-  Ackermann(double front_wheelbase_width = 1.0, double wheelbase_length = 1.0, Point front_position=Point(0,0), Angle heading = Angle::radians(0));
+  Ackermann(double front_wheelbase_width = 1.0, double wheelbase_length = 1.0, Point position=Point(0,0), Angle heading = Angle::radians(0));
 
   Point front_left_position() const;
   Point front_position() const;

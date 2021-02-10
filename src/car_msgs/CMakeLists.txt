@@ -8,6 +8,11 @@ add_message_files(DIRECTORY msg FILES
   speedometer.msg
 )
 
+add_service_files(
+   FILES
+   reset_odometer.srv
+ )
+
 generate_messages(DEPENDENCIES std_msgs)
 
 # this line must be before any executables are added

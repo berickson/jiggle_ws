@@ -7,7 +7,7 @@
   <node pkg="rosserial_python" type="message_info_service.py" name="rosserial_message_info" />
 
   <node name="car_instruments"          pkg="car"  type="car_instruments" output="screen"/>
-  <node name="jiggle_lidar_odom"  pkg="jiggle" type="lidar_odom" output="screen"/>
+  <node name="lidar_odom"  pkg="jiggle" type="lidar_odom" output="screen"/>
   
 <!--   
   <node pkg="rosservice" type="rosservice" name="stop_motor" args="call \-\-wait /stop_motor" />  
@@ -27,16 +27,16 @@
 
   <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_odom_to_base_link_lidar_broadcaster" args="-0.1524 0 -0.254 -3.04159 0 0 lidar_odom_laser lidar_base_link" />  -->
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_odom_to_lidar_base_link_broadcaster" args="-0.1524 0 0.254 3.04159 0 0  lidar_odom_laser lidar_base_link " />
+  <node pkg="tf" type="static_transform_publisher" name="lidar_odom_to_lidar_base_link_broadcaster" args="-0.1524 0 0.254 0 1 0 0  lidar_odom_laser lidar_base_link 100" />
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.1524 0 0.254 3.04159 0 0  base_link laser" />
+  <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.1524 0 0.254 0 1 0 0 base_link laser 100" />
   <node pkg="car" type="odom_tracker" name="odom_tracker"/>
 
   <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
     <param name="serial_port"         type="string" value="/dev/car-lidar"/>  
     <param name="serial_baudrate"     type="int"    value="256000"/><!--A3 -->
     <param name="frame_id"            type="string" value="laser"/>
-    <param name="inverted"            type="bool"   value="false"/>
+    <param name="inverted"            type="bool"   value="true"/>
     <param name="angle_compensate"    type="bool"   value="true"/>
     <param name="scan_mode"           type="string" value="Sensitivity"/>
   </node>

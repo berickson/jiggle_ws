@@ -1,12 +1,13 @@
 digraph G {
-"lidar_odom_laser" -> "lidar_base_link"[label="Broadcaster: /lidar_odom_to_lidar_base_link_broadcaster\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1612931385.548 sec old)\nBuffer length: 0.000 sec\n"];
-"lidar_odom" -> "lidar_odom_laser"[label="Broadcaster: /lidar_odom\nAverage rate: 13.673 Hz\nMost recent transform: 1612931385.435 ( 0.114 sec old)\nBuffer length: 4.754 sec\n"];
-"odom" -> "base_link"[label="Broadcaster: /car_instruments\nAverage rate: 100.197 Hz\nMost recent transform: 1612931385.540 ( 0.008 sec old)\nBuffer length: 4.821 sec\n"];
-"map" -> "odom"[label="Broadcaster: /odom_tracker\nAverage rate: 10.213 Hz\nMost recent transform: 1612931385.451 ( 0.097 sec old)\nBuffer length: 4.700 sec\n"];
-"base_link" -> "laser"[label="Broadcaster: /base_to_laser_broadcaster\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1612931385.548 sec old)\nBuffer length: 0.000 sec\n"];
-"map" -> "lidar_odom"[label="Broadcaster: /odom_tracker\nAverage rate: 10.213 Hz\nMost recent transform: 1612931385.451 ( 0.097 sec old)\nBuffer length: 4.700 sec\n"];
+"lidar_odom_laser" -> "lidar_base_link"[label="Broadcaster: /lidar_odom_to_lidar_base_link_broadcaster\nAverage rate: 10.197 Hz\nMost recent transform: 1613087747.017 ( -0.090 sec old)\nBuffer length: 4.707 sec\n"];
+"lidar_odom_laser_invert" -> "lidar_odom_laser"[label="Broadcaster: /lidar_odom_to_lidar_invert\nAverage rate: 10.201 Hz\nMost recent transform: 1613087747.001 ( -0.073 sec old)\nBuffer length: 4.607 sec\n"];
+"odom" -> "base_link"[label="Broadcaster: /car_instruments\nAverage rate: 100.199 Hz\nMost recent transform: 1613087746.920 ( 0.007 sec old)\nBuffer length: 4.701 sec\n"];
+"map" -> "odom"[label="Broadcaster: /odom_tracker\nAverage rate: 10.217 Hz\nMost recent transform: 1613087746.865 ( 0.062 sec old)\nBuffer length: 4.600 sec\n"];
+"base_link" -> "laser"[label="Broadcaster: /base_to_laser_broadcaster\nAverage rate: 10.200 Hz\nMost recent transform: 1613087746.947 ( -0.019 sec old)\nBuffer length: 4.608 sec\n"];
+"map" -> "lidar_odom"[label="Broadcaster: /odom_tracker\nAverage rate: 10.217 Hz\nMost recent transform: 1613087746.865 ( 0.062 sec old)\nBuffer length: 4.600 sec\n"];
+"lidar_odom" -> "lidar_odom_laser_invert"[label="Broadcaster: /lidar_odom\nAverage rate: 13.786 Hz\nMost recent transform: 1613087746.825 ( 0.103 sec old)\nBuffer length: 4.642 sec\n"];
 edge [style=invis];
  subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
-"Recorded at time: 1612931385.548"[ shape=plaintext ] ;
+"Recorded at time: 1613087746.927"[ shape=plaintext ] ;
  }->"map";
 }

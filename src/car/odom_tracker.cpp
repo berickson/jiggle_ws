@@ -33,7 +33,7 @@ class OdomTracker {
 
             try{
                 lidar_odom_transform_= tf_buffer_.lookupTransform(
-                    "lidar_base_link",
+                    "lidar_odom_base_link",
                     "lidar_odom",
                     ros::Time(0)
                     );

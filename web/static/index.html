@@ -138,8 +138,8 @@
   </style>
   <script src="angular.min.js"></script>
   <script src="panzoom.min.js"></script>
-  <script src="index.js"></script>
   <script src="roslib.js"></script>
+  <script src="index.js"></script>
 
   <script src="play_path.js"></script>
   <script src="three.min.js"></script>
@@ -180,10 +180,10 @@
             <div style='text-align:right' class='data'>{{ car.rjust(car.car_state.velocity.toFixed(1),5) }} m/s</div>
           </div>
           <div class="itembox">
-            <div>{{car.car_state.v_bat | number:1}}V</div>
+            <div>{{car.battery.voltage | number:1}}V</div>
             <svg width="64" height="32">
               <rect x="2" y="2" width="60" height="28" style="fill:lightgray;stroke:gray;stroke-width:2" />
-              <rect ng-if="car.battery_percent" x="4" y="4" ng-attr-width="{{car.Math.max(56*car.battery_percent/100,0)}}"
+              <rect ng-if="car.battery.percentage" x="4" y="4" ng-attr-width="{{car.Math.max(56*car.battery.percentage,0)}}"
                 height="24" style="fill:black;stroke:black" />
 
             </svg>
@@ -219,11 +219,11 @@
               <tbody class='data small_text'>
                 <tr ng-repeat='wheel in ["fl","fr","motor"]'>
                   <td>{{wheel}}</td>
-                  <td>{{car.rjust(car.car_state[wheel].v.toFixed(2),7)}}</td>
-                  <td>{{car.rjust(car.car_state[wheel].v_smooth.toFixed(1),6)}}</td>
-                  <td>{{car.rjust(car.car_state[wheel].a_smooth.toFixed(1),6)}}</td>
-                  <td>{{car.rjust(car.car_state[wheel].meters.toFixed(2),8)}}</td>
-                  <td>{{car.rjust(car.car_state[wheel].ticks,8)}}</td>
+                  <td>{{car.rjust(car.speedometers[wheel].v.toFixed(2),7)}}</td>
+                  <td>{{car.rjust(car.speedometers[wheel].v_smooth.toFixed(1),6)}}</td>
+                  <td>{{car.rjust(car.speedometers[wheel].a_smooth.toFixed(1),6)}}</td>
+                  <td>{{car.rjust(car.speedometers[wheel].meters.toFixed(2),8)}}</td>
+                  <td>{{car.rjust(car.speedometers[wheel].ticks,8)}}</td>
                 </tr>
               </tbody>
             </table>

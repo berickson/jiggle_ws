@@ -25,6 +25,13 @@ RUN apt-get update && apt-get install -y \
   ros-melodic-rosserial-arduino ros-melodic-rosserial-server ros-melodic-rosserial-python ros-melodic-rosserial-*
   # ros-melodic-rosserial-embeddedlinux ros-kinetic-rosserial-windows ros-kinetic-rosserial-server ros-kinetic-rosserial-python
 
+
+# Install special version of node because of conflict, see
+# https://github.com/ros/rosdistro/issues/27302
+RUN apt-get install -y nodejs=8.10.0~dfsg-2ubuntu0.2 nodejs-dev=8.10.0~dfsg-2ubuntu0.2 npm
+#RUN apt-get install npm
+RUN npm install http-server -g
+
 #
 ######################################
 

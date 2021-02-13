@@ -1,5 +1,10 @@
 var car_vm;
 
+let ros = new ROSLIB.Ros({
+  url : 'ws://blue-crash4:9090'
+  });        
+
+
 angular.module("car",[]).controller("CarController", function($scope, $http, $timeout, $log, $q, $filter) {
   var vm = this;
   vm.Math = Math;
@@ -368,25 +373,80 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
   vm.refresh_track_names();
 
 
-  var poller = function () {
-    $http({ method: 'GET', timeout: 5000, url: '/car/get_state' })
-      .then(function (r) {
-        let car_state = r.data;
-        viewer.set_car_state(car_state);
-        vm.car_state = car_state;
-        var v_bat = vm.car_state.v_bat;
-        var min_bat = 3.5 * 3;
-        var max_bat = 4.2 * 3;
-        vm.battery_percent = 100 * (v_bat - min_bat) / (max_bat - min_bat);
-        vm.poll_ok = true;
-        $timeout(poller, 100);
-      },
-      function () {
-        vm.poll_ok = false;
-        $timeout(poller, 1000);
-      });
-  };
-  poller();
+  // var poller = function () {
+  //   $http({ method: 'GET', timeout: 5000, url: '/car/get_state' })
+  //     .then(function (r) {
+  //       let car_state = r.data;
+  //       viewer.set_car_state(car_state);
+  //       vm.car_state = car_state;
+  //       var v_bat = vm.car_state.v_bat;
+  //       var min_bat = 3.5 * 3;
+  //       var max_bat = 4.2 * 3;
+  //       vm.battery_percent = 100 * (v_bat - min_bat) / (max_bat - min_bat);
+  //       vm.poll_ok = true;
+  //       $timeout(poller, 100);
+  //     },
+  //     function () {
+  //       vm.poll_ok = false;
+  //       $timeout(poller, 1000);
+  //     });
+  // };
+  // poller();
+
+  
+  var battery_listener = new ROSLIB.Topic({
+    ros : ros,
+    name : '/car/battery',
+    queue_length : 1,
+    throttle_rate: 1000
+
+    
+    // messageType : 'std_msgs/String'
+  });
+
+  
+  battery_listener.subscribe(function(message) {
+    vm.battery = message;
+    // vm.battery_percent = message.percentage * 100;
+  });
+
+  vm.speedometers = [];
+  var fr_subscriber = new ROSLIB.Topic({
+    ros : ros,
+    name : '/car/speedometers/fr',
+    queue_length : 1,
+    throttle_rate: 100
+
+    // messageType : 'std_msgs/String'
+  });
+  fr_subscriber.subscribe(function(message) {
+    vm.speedometers.fr = message;
+    get_car_scope().$apply();
+  });
+
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/car/speedometers/fl',
+    queue_length : 1,
+    throttle_rate: 500
+    // messageType : 'std_msgs/String'
+  }).subscribe(function(message) {
+    vm.speedometers.fl = message;
+    get_car_scope().$apply();
+  });
+
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/car/speedometers/motor',
+    queue_length : 1,
+    throttle_rate: 100
+    // messageType : 'std_msgs/String'
+  }).subscribe(function(message) {
+    vm.speedometers.motor = message;
+    get_car_scope().$apply();
+  });
+
+
 
   vm.road_sign_nodes = [];
 
@@ -426,28 +486,28 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
     return;
   };
 
-  var poller2 = function () {
-    $http({ method: 'GET', timeout: 5000, url: '/pi/get_state' })
-      .then(function (r) {
-        vm.pi_state = r.data;
-        $timeout(poller2, 1000);
-      },
-      function () {
-        $timeout(poller2, 1000);
-      });
-  };
-  poller2();
+  // var poller2 = function () {
+  //   $http({ method: 'GET', timeout: 5000, url: '/pi/get_state' })
+  //     .then(function (r) {
+  //       vm.pi_state = r.data;
+  //       $timeout(poller2, 1000);
+  //     },
+  //     function () {
+  //       $timeout(poller2, 1000);
+  //     });
+  // };
+  // poller2();
 
-  var poller3 = function () {
-    $http({ method: 'GET', timeout: 5000, url: '/run_settings' })
-      .then(function (r) {
-        vm.run_settings = r.data;
-        vm.run_settings_array = vm.to_field_array(vm.run_settings);
-      },
-      function () {
-        $timeout(poller3, 1000);
-      });
-  };
-  poller3();
+  // var poller3 = function () {
+  //   $http({ method: 'GET', timeout: 5000, url: '/run_settings' })
+  //     .then(function (r) {
+  //       vm.run_settings = r.data;
+  //       vm.run_settings_array = vm.to_field_array(vm.run_settings);
+  //     },
+  //     function () {
+  //       $timeout(poller3, 1000);
+  //     });
+  // };
+  // poller3();
   car_vm = vm; // expose this angular stuff to viewer
 });

@@ -20,9 +20,6 @@ let viewer = (function () {
         lidar_x_pos = 0.57 / 2 - 0.0635,
         label_renderer = new THREE.CSS2DRenderer();
 
-    let ros = new ROSLIB.Ros({
-        url : 'ws://blue-crash4:9090'
-        });        
 
     label_renderer.setSize( window.innerWidth, window.innerHeight );
     label_renderer.domElement.style.position = 'absolute';
@@ -294,9 +291,13 @@ let viewer = (function () {
     }
 
     function get_scan() {
+        console.log("get_scan called");
         let scan_listener = new ROSLIB.Topic({
             ros : ros,
-            name : '/scan'//,
+            name : '/scan',
+            // throttle_rate : 200,
+            queue_length : 1
+            //,
             // messageType : 'std_msgs/String'
         });
         

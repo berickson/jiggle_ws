@@ -85,10 +85,12 @@ let viewer = (function () {
     sun.position.z = 1000; // shine down from z
     sun.castShadow = true;
 
-    function set_car_state(car_state) {
-        car.position.x = car_state.front_x - Math.cos(car_state.heading) * 0.3;
-        car.position.y = car_state.front_y - Math.sin(car_state.heading) * 0.3;
-        car.rotation.z = car_state.heading;
+    function set_car_state(translation, yaw) {
+        car.position.x = translation.x; //= car_state.front_x - Math.cos(car_state.heading) * 0.3;
+        car.position.y = translation.y; // car_state.front_y - Math.sin(car_state.heading) * 0.3;
+        car.position.z = translation.z;
+
+        car.rotation.z = yaw;
         if(controls) {
             controls.update();
             //controls.target.set(car.position);
@@ -294,7 +296,8 @@ let viewer = (function () {
         console.log("get_scan called");
         let scan_listener = new ROSLIB.Topic({
             ros : ros,
-            name : '/scan',
+            name : "/scan",
+            messageType: "sensor_msgs/LaserScan",
             // throttle_rate : 200,
             queue_length : 1
             //,

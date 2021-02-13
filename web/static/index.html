@@ -175,9 +175,9 @@
       <div style='pointer-events: none'>
         <div class="groupbox row">
           <div class='itembox'>
-            <div class='bigtext data'>{{ car.rjust((car.car_state.velocity * 2.23694).toFixed(1),5) }}</div>
+            <div class='bigtext data'>{{ car.rjust((car.speedometers.fr.v_smooth * 2.23694).toFixed(1),5) }}</div>
             <div style='text-align:right'>mph</div>
-            <div style='text-align:right' class='data'>{{ car.rjust(car.car_state.velocity.toFixed(1),5) }} m/s</div>
+            <div style='text-align:right' class='data'>{{ car.rjust(car.speedometers.fr.v_smooth.toFixed(1),5) }} m/s</div>
           </div>
           <div class="itembox">
             <div>{{car.battery.voltage | number:1}}V</div>
@@ -193,18 +193,18 @@
             <div>
               <svg width="32" height="32">
                 <circle cx="16" cy="16" r="14" stroke="gray" stroke-width="2" fill="LightGray" />
-                <line ng-if="car.car_state" x1="16" y1="16" ng-attr-x2={{16-14*car.Math.sin(car.car_state.heading)}}
-                  ng-attr-y2={{16-14*car.Math.cos(car.car_state.heading)}} style="stroke:gray;stroke-width:2" />
+                <line ng-if="car.base_link" x1="16" y1="16" ng-attr-x2={{16-14*car.Math.sin(car.base_link.yaw)}}
+                  ng-attr-y2={{16-14*car.Math.cos(car.base_link.yaw)}} style="stroke:gray;stroke-width:2" />
               </svg>
             </div>
             <div>
-              {{car.car_state.heading * 180 / car.Math.PI | number:1}}°
+              {{car.base_link.yaw * 180 / car.Math.PI | number:1}}°
             </div>
           </div>
           <div class='itembox'>
             <div>Position</div>
-            <div>x: {{car.car_state.front_x.toFixed(2)}}</div>
-            <div>y: {{car.car_state.front_y.toFixed(2)}}</div>
+            <div>x: {{car.base_link.translation.x.toFixed(2)}}</div>
+            <div>y: {{car.base_link.translation.y.toFixed(2)}}</div>
           </div>
           <div class='itembox'>
             <table class='small_text'>
@@ -232,10 +232,6 @@
           <div class='itembox'>
             <div ng-if="car.pi_state" ng-repeat="cpu in car.pi_state.cpu track by $index">cpu{{$index}}<span class='data'>{{car.rjust(cpu.toFixed(0),4)}}</span>
             </div>
-          </div>
-          <div class='itembox'>
-            <div>mpu temp</div>
-            <div>{{(car.car_state.temperature*1.8+32).toFixed(1)}}°</div>
           </div>
         </div>
 

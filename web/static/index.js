@@ -397,6 +397,7 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
   var battery_listener = new ROSLIB.Topic({
     ros : ros,
     name : '/car/battery',
+    messageType: 'sensor_msgs/BatteryState',
     queue_length : 1,
     throttle_rate: 1000
 
@@ -410,10 +411,38 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
     // vm.battery_percent = message.percentage * 100;
   });
 
+  var tf_client = new ROSLIB.TFClient({
+    ros : ros,
+    fixedFrame : "map",
+    rate: 10,
+    angularThres : 0.00001,
+     transThres : 0.00001
+  });
+
+  tf_client.subscribe('base_link', function(msg) {
+    vm.base_link = msg;
+
+    let quat = new THREE.Quaternion(
+      msg.rotation.x,
+      msg.rotation.y,
+      msg.rotation.z,
+      msg.rotation.w
+    );
+    let euler = new THREE.Euler();
+    euler.setFromQuaternion(quat);
+    vm.base_link.yaw = euler.z;
+
+    viewer.set_car_state(vm.base_link.translation, vm.base_link.yaw);
+    
+
+  });
+
+
   vm.speedometers = [];
   var fr_subscriber = new ROSLIB.Topic({
     ros : ros,
     name : '/car/speedometers/fr',
+    messageType: 'car_msgs/speedometer',
     queue_length : 1,
     throttle_rate: 100
 

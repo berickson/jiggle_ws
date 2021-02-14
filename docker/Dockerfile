@@ -22,7 +22,13 @@ RUN apt-get update && apt-get install -y \
 RUN pip install psutil platformio
 
 RUN apt-get update && apt-get install -y \
-  ros-melodic-rosserial-arduino ros-melodic-rosserial-server ros-melodic-rosserial-python ros-melodic-rosserial-*
+  ros-melodic-rosserial-arduino \
+  ros-melodic-rosserial-server \
+  ros-melodic-rosserial-python \
+  ros-melodic-rosserial-* \
+  ros-melodic-tf2-web-republisher
+  
+
   # ros-melodic-rosserial-embeddedlinux ros-kinetic-rosserial-windows ros-kinetic-rosserial-server ros-kinetic-rosserial-python
 
 

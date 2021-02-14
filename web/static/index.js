@@ -2,13 +2,28 @@ var car_vm;
 
 let ros = new ROSLIB.Ros({
   url : 'ws://blue-crash4:9090'
-  });        
+  });
+
+
+ros.on('connection', function() {
+  console.log('Connected to websocket server.');
+});
+
+ros.on('error', function(error) {
+  console.log('Error connecting to websocket server: ', error);
+});
+
+ros.on('close', function() {
+  console.log('Connection to websocket server closed.');
+});
 
 
 angular.module("car",[]).controller("CarController", function($scope, $http, $timeout, $log, $q, $filter) {
   var vm = this;
   vm.Math = Math;
   vm.JSON = JSON;
+
+
 
   vm.type_of = function (val) {
     return typeof (val);
@@ -166,14 +181,54 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
   $log.info("record clicked");
   };
 
+
+   var reset_odom_service = new ROSLIB.Service({
+     ros : ros,
+     name : '/reset_odom',
+     serviceType : 'car_msgs/reset_odom'
+   });
+
   vm.reset_odometer = function () {
-    $http.put('/command/reset_odometer', "1").success(function () {
-      $log.info('reset_odometer success');
-    }).error(function (response, code) {
-      vm.reset_odometer_error = "  (" + code + ")" + response.message;
+    var request = new ROSLIB.ServiceRequest({
     });
-    $log.info("reset_odometer clicked");
+  
+    reset_odom_service.callService(request, function(result) {
+      console.log("reset odom completed");
+    });
   };
+
+  var start_motor_service = new ROSLIB.Service({
+    ros : ros,
+    name : '/start_motor',
+    serviceType : 'std_srvs/Empty'
+  });
+
+  vm.start_motor = function () {
+    var request = new ROSLIB.ServiceRequest({
+    });
+  
+    start_motor_service.callService(request, function(result) {
+      console.log("start_motor completed");
+    });
+  };
+
+  var stop_motor_service = new ROSLIB.Service({
+    ros : ros,
+    name : '/stop_motor',
+    serviceType : 'std_srvs/Empty'
+  });
+
+
+  vm.stop_motor = function () {
+    var request = new ROSLIB.ServiceRequest({
+    });
+  
+    stop_motor_service.callService(request, function(result) {
+      console.log("stop_motor completed");
+    });
+  };
+
+
 
   vm.reset_zoom = function () {
     // viewbox is a square centered at center of route  
@@ -414,12 +469,15 @@ angular.module("car",[]).controller("CarController", function($scope, $http, $ti
   var tf_client = new ROSLIB.TFClient({
     ros : ros,
     fixedFrame : "map",
-    rate: 10,
+    rate: 100,
     angularThres : 0.00001,
      transThres : 0.00001
   });
 
+  vm.tf_count = 0;
+
   tf_client.subscribe('base_link', function(msg) {
+    ++vm.tf_count;
     vm.base_link = msg;
 
     let quat = new THREE.Quaternion(

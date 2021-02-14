@@ -93,7 +93,7 @@ let viewer = (function () {
         car.rotation.z = yaw;
         if(controls) {
             controls.update();
-            //controls.target.set(car.position);
+            controls.target.set(car.position.x, car.position.y, 0);
         }
     }
 
@@ -274,7 +274,7 @@ let viewer = (function () {
         let lidar_template = new THREE.Mesh(
             new THREE.BoxGeometry(0.03, 0.03, 0.35),
             new THREE.MeshLambertMaterial({ color: 0x00ff00 }));
-        lidar_template.position.z = 0.35/2;
+        lidar_template.position.z = -0.35/2;
         lidar_elements = [];
         for (let i = 0; i < 1440; i++) { // todo: get this number from the scans
             let lidar_element = lidar_template.clone();
@@ -298,7 +298,7 @@ let viewer = (function () {
             ros : ros,
             name : "/scan",
             messageType: "sensor_msgs/LaserScan",
-            // throttle_rate : 200,
+            throttle_rate : 200,
             queue_length : 1
             //,
             // messageType : 'std_msgs/String'
@@ -324,9 +324,10 @@ let viewer = (function () {
                         lidar_element.visible = false;
                     }
                 }
-                scan_mesh.position.x = 0;//car.position.x + lidar_x_pos * Math.cos(car.rotation.z);
-                scan_mesh.position.y = 0;//car.position.y + lidar_x_pos * Math.sin(car.rotation.z);
-                scan_mesh.rotation.z = 0;//car.rotation.z;
+                scan_mesh.position.x = car.position.x + lidar_x_pos * Math.cos(car.rotation.z);
+                scan_mesh.position.y = car.position.y + lidar_x_pos * Math.sin(car.rotation.z);
+                scan_mesh.rotation.x = Math.PI;
+                scan_mesh.rotation.z = Math.PI - car.rotation.z;
             }
 
             

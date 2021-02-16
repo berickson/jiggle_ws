@@ -18,6 +18,13 @@ add_executable(
   odom_tracker.cpp)
 target_link_libraries(odom_tracker ${catkin_LIBRARIES})
 
+add_executable(
+  driver
+  driver.cpp)
+target_link_libraries(driver ${catkin_LIBRARIES})
+add_dependencies(driver ${catkin_EXPORTED_TARGETS})
+
+
 
 add_executable(
   scan_converter

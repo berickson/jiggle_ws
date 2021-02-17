@@ -1,0 +1,17 @@
+#goal definition
+#Header header
+float32 distance
+float32 max_accel
+float32 max_decel
+float32 max_v
+---
+#result definition
+#Header header
+bool success
+string message
+float32 distance
+
+---
+#feedback
+#Header header
+float32 distance

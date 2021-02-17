@@ -169,7 +169,7 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
 
     Point rear_position = ackermann_.rear_position();
     
-    pose_msg.header.stamp = ros::Time::now();
+    pose_msg.header.stamp = d->header.stamp;
     pose_msg.header.frame_id = "odom";
     // pose_msg.child_frame_id = turtle_name;
     pose_msg.pose.position.x = rear_position.x;
@@ -187,7 +187,7 @@ void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
 
     geometry_msgs::TransformStamped tf_msg;
 
-    tf_msg.header.stamp = ros::Time::now();
+    tf_msg.header.stamp = d->header.stamp;
     tf_msg.header.frame_id = "odom";
     tf_msg.child_frame_id = "base_link";
     tf_msg.transform.translation.x = rear_position.x;

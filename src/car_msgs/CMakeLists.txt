@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(car_msgs)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs sensor_msgs message_generation laser_geometry tf)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy actionlib std_msgs sensor_msgs  message_generation laser_geometry tf)
 
 add_message_files(DIRECTORY msg FILES 
   update.msg 
@@ -13,7 +13,11 @@ add_service_files(
    reset_odometer.srv
  )
 
-generate_messages(DEPENDENCIES std_msgs)
+add_action_files( DIRECTORY action FILES
+  drive_distance.action
+)
+
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs)
 
 # this line must be before any executables are added
 catkin_package()

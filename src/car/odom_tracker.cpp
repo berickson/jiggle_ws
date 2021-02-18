@@ -5,7 +5,7 @@
 #include <tf2_ros/transform_listener.h>
 #include <laser_geometry/laser_geometry.h>
 
-#include "car_msgs/reset_odometer.h"
+#include "car_msgs/ResetOdometer.h"
 
 
 // based on https://answers.ros.org/question/11232/how-to-turn-laser-scan-to-point-cloud-map/
@@ -15,7 +15,7 @@ class OdomTracker {
         OdomTracker();
 
         void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
-        bool reset_odom(car_msgs::reset_odometer::Request  &req, car_msgs::reset_odometer::Response &res) {
+        bool reset_odom(car_msgs::ResetOdometer::Request  &req, car_msgs::ResetOdometer::Response &res) {
             ROS_INFO("reset odometer");
 
             try{

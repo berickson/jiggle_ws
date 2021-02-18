@@ -5,7 +5,7 @@
 #include "kalman.h"
 #include <string>
 
-#include "car_msgs/speedometer.h"
+#include "car_msgs/Speedometer.h"
 
 class Speedometer
 {
@@ -34,7 +34,7 @@ public:
 
   // updates internal state and returns meters just moved
   double update_from_sensor(unsigned int clock_us, int odo_a, unsigned int a_us, int odo_b = 0, unsigned int b_us = 0);
-  car_msgs::speedometer get_speedometer_message() const;
+  car_msgs::Speedometer get_speedometer_message() const;
 
   KalmanFilter kalman_v;
   KalmanFilter kalman_a;

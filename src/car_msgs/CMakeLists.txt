@@ -3,18 +3,18 @@ project(car_msgs)
 find_package(catkin REQUIRED COMPONENTS roscpp rospy actionlib std_msgs sensor_msgs  message_generation laser_geometry tf)
 
 add_message_files(DIRECTORY msg FILES 
-  update.msg 
-  rc_command.msg
-  speedometer.msg
+  Update.msg 
+  RcCommand.msg
+  Speedometer.msg
 )
 
 add_service_files(
    FILES
-   reset_odometer.srv
+   ResetOdometer.srv
  )
 
 add_action_files( DIRECTORY action FILES
-  drive_distance.action
+  DriveDistance.action
 )
 
 generate_messages(DEPENDENCIES std_msgs actionlib_msgs)

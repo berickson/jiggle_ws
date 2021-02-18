@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include "logger.h"
-#include "car_msgs/speedometer.h"
+#include "car_msgs/Speedometer.h"
 using namespace std;
 
 Speedometer::Speedometer()  {
@@ -29,9 +29,9 @@ double Speedometer::get_meters_travelled() const {
   return meters_travelled;
 }
 
-car_msgs::speedometer Speedometer::get_speedometer_message() const
+car_msgs::Speedometer Speedometer::get_speedometer_message() const
 {
-  car_msgs::speedometer m;
+  car_msgs::Speedometer m;
   m.v = get_velocity();
 
   m.v_smooth = get_smooth_velocity();

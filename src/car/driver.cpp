@@ -3,9 +3,9 @@
 
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
-#include "car_msgs/speedometer.h"
-#include "car_msgs/rc_command.h"
-#include "car_msgs/drive_distanceAction.h"
+#include "car_msgs/Speedometer.h"
+#include "car_msgs/RcCommand.h"
+#include "car_msgs/DriveDistanceAction.h"
 #include "std_srvs/Trigger.h"
 #include "math.h"
 
@@ -39,18 +39,20 @@ VelocityAndAcceleration sin_wave(double t, double amplitude, double period ) {
 class DriveDistanceAction {
 public:
     ros::NodeHandle node_;
-    actionlib::SimpleActionServer<car_msgs::drive_distanceAction> as_;
+    actionlib::SimpleActionServer<car_msgs::DriveDistanceAction> as_;
     std::string action_name_;
     float start_meters_ = NAN;
-    car_msgs::drive_distanceGoal goal_;
-    car_msgs::drive_distanceFeedback feedback_;
-    car_msgs::drive_distanceResult result_;
+    car_msgs::DriveDistanceGoal goal_;
+    car_msgs::DriveDistanceFeedback feedback_;
+    car_msgs::DriveDistanceResult result_;
     ros::Subscriber sub_;
     ros::Publisher rc_command_publisher_;
     ros::Publisher enable_rc_mode_publisher_;
     ros::Publisher setpoint_v_publisher_;
     ros::Publisher setpoint_a_publisher_;
-    car_msgs::rc_command rc_command;
+    car_msgs::RcCommand rc_command;
+
+    float esc_us_float = 1500;
     
   DriveDistanceAction(std::string name) : 
     as_(node_, name, false),
@@ -62,7 +64,7 @@ public:
 
     //subscribe to the data topic of interest
     sub_ = node_.subscribe("/car/speedometers/motor", 1, &DriveDistanceAction::speedometer_callback, this);
-    rc_command_publisher_ = node_.advertise<car_msgs::rc_command>("car/rc_command", 1);
+    rc_command_publisher_ = node_.advertise<car_msgs::RcCommand>("car/rc_command", 1);
     setpoint_v_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/v", 1);
     setpoint_a_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/a", 1);
 
@@ -77,6 +79,8 @@ public:
   }
 
   void enable_rc_mode() {
+    esc_us_float = 1540;
+
     ros::ServiceClient client = node_.serviceClient<std_srvs::Trigger>("car/enable_rc_mode");
     std_srvs::Trigger srv;
     if (client.call(srv))
@@ -90,6 +94,10 @@ public:
   }
 
   void disable_rc_mode() {
+    rc_command.esc_us = 1500;
+    rc_command.str_us = 1500;
+    esc_us_float = 1500;
+    rc_command_publisher_.publish(rc_command);    
     ros::ServiceClient client = node_.serviceClient<std_srvs::Trigger>("car/disable_rc_mode");
     std_srvs::Trigger srv;
     if (client.call(srv))
@@ -118,7 +126,7 @@ public:
     as_.setPreempted();
   }
 
-  void speedometer_callback(const car_msgs::speedometer::ConstPtr& msg)
+  void speedometer_callback(const car_msgs::Speedometer::ConstPtr& msg)
   {
     // make sure that the action hasn't been canceled
     if (!as_.isActive())
@@ -140,13 +148,16 @@ public:
 
     if(feedback_.distance > goal_.distance)
     {
+
+
+        disable_rc_mode();
         as_.setSucceeded(result_);
         ROS_INFO("%s: Succeeded", action_name_.c_str());
         // as_.setAborted(result_);
     } 
   }
 
-  void set_speed(const car_msgs::speedometer & motor_speedometer, VelocityAndAcceleration setpoint) {
+  void set_speed(const car_msgs::Speedometer & motor_speedometer, VelocityAndAcceleration setpoint) {
         float k_v = 0.3;
         float k_a = 0.1;
 
@@ -155,8 +166,6 @@ public:
         float v_error = speed_ahead - motor_speedometer.v_smooth;
         float a_error = setpoint.a - motor_speedometer.a_smooth;
 
-
-        static float esc_us_float = 1540;
 
         esc_us_float += k_v * v_error + k_a * a_error;
         rc_command.header.stamp = motor_speedometer.header.stamp;

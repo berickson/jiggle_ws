@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 
-#include "car_msgs/update.h"
-#include "car_msgs/speedometer.h"
+#include "car_msgs/Update.h"
+#include "car_msgs/Speedometer.h"
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -15,7 +15,7 @@
 class CarInstruments {
      public:
         CarInstruments();
-        void update_callback(const car_msgs::update::ConstPtr& update);
+        void update_callback(const car_msgs::Update::ConstPtr& update);
 
         Speedometer front_right_wheel_;
         Speedometer front_left_wheel_;
@@ -46,9 +46,9 @@ class CarInstruments {
 
         ros::Subscriber update_sub_;
         Ackermann ackermann_;
-        car_msgs::speedometer last_fr_;
-        car_msgs::speedometer last_fl_;
-        car_msgs::speedometer last_motor_;
+        car_msgs::Speedometer last_fr_;
+        car_msgs::Speedometer last_fl_;
+        car_msgs::Speedometer last_motor_;
 
 };
 
@@ -58,12 +58,12 @@ CarInstruments::CarInstruments(){
     motor_.meters_per_tick = motor_meters_per_odometer_tick;
 
     bool latch = true;
-    fl_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fl", 10, latch);
-    fr_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/fr", 10, latch);
-    motor_speedometer_publisher_ = node_.advertise<car_msgs::speedometer> ("/car/speedometers/motor", 10, latch);
+    fl_speedometer_publisher_ = node_.advertise<car_msgs::Speedometer> ("/car/speedometers/fl", 10, latch);
+    fr_speedometer_publisher_ = node_.advertise<car_msgs::Speedometer> ("/car/speedometers/fr", 10, latch);
+    motor_speedometer_publisher_ = node_.advertise<car_msgs::Speedometer> ("/car/speedometers/motor", 10, latch);
     ackerman_fr_publisher_ = node_.advertise<geometry_msgs::PoseStamped> ("/car/ackermann/fr", 10, latch);
     const int queue_length=5; // 1 ensures latest message
-    update_sub_ = node_.subscribe<car_msgs::update> ("/car/update", queue_length, &CarInstruments::update_callback, this);
+    update_sub_ = node_.subscribe<car_msgs::Update> ("/car/update", queue_length, &CarInstruments::update_callback, this);
 
 }
 
@@ -123,7 +123,7 @@ Angle CarInstruments::angle_for_steering(int str) {
   return Angle::degrees(t.lookup(str));
 }
 
-void CarInstruments::update_callback(const car_msgs::update::ConstPtr& d){
+void CarInstruments::update_callback(const car_msgs::Update::ConstPtr& d){
     // ROS_INFO("got car update ms: %d us: %d", d->ms, d->us);
     ++update_count_;
 

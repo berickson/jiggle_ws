@@ -1,0 +1,1 @@
+rostopic pub driver/goal car_msgs/drive_distanceGoal '{ distance max_accel max_decel max_v}'

@@ -5,6 +5,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy actionlib std_msgs sensor_m
 add_message_files(DIRECTORY msg FILES 
   Update.msg 
   RcCommand.msg
+  SpeedCommand.msg
+  SteerCommand.msg
   Speedometer.msg
 )
 

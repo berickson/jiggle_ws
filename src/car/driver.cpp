@@ -6,6 +6,8 @@
 #include "car_msgs/Speedometer.h"
 #include "car_msgs/RcCommand.h"
 #include "car_msgs/DriveDistanceAction.h"
+#include "car_msgs/SteerCommand.h"
+#include "car_msgs/SpeedCommand.h"
 #include "std_srvs/Trigger.h"
 #include "math.h"
 
@@ -45,12 +47,15 @@ public:
     car_msgs::DriveDistanceGoal goal_;
     car_msgs::DriveDistanceFeedback feedback_;
     car_msgs::DriveDistanceResult result_;
-    ros::Subscriber sub_;
+    ros::Subscriber drive_distance_subscriber_;
+    ros::Subscriber speed_command_subscriber_;
     ros::Publisher rc_command_publisher_;
     ros::Publisher enable_rc_mode_publisher_;
     ros::Publisher setpoint_v_publisher_;
     ros::Publisher setpoint_a_publisher_;
+    ros::Publisher speed_command_publisher_;
     car_msgs::RcCommand rc_command;
+    car_msgs::Speedometer motor_speedometer_;
 
     float esc_us_float = 1500;
     
@@ -63,8 +68,10 @@ public:
     as_.registerPreemptCallback(boost::bind(&DriveDistanceAction::preempt_callback, this));
 
     //subscribe to the data topic of interest
-    sub_ = node_.subscribe("/car/speedometers/motor", 1, &DriveDistanceAction::speedometer_callback, this);
+    drive_distance_subscriber_ = node_.subscribe("car/speedometers/motor", 1, &DriveDistanceAction::speedometer_callback, this);
+    speed_command_subscriber_ = node_.subscribe("car/speed_command", 1, &DriveDistanceAction::speed_command_callback, this);
     rc_command_publisher_ = node_.advertise<car_msgs::RcCommand>("car/rc_command", 1);
+    speed_command_publisher_ = node_.advertise<car_msgs::SpeedCommand>("car/speed_command", 1);
     setpoint_v_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/v", 1);
     setpoint_a_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/a", 1);
 
@@ -128,28 +135,33 @@ public:
 
   void speedometer_callback(const car_msgs::Speedometer::ConstPtr& msg)
   {
+    motor_speedometer_ = *msg;
+
     // make sure that the action hasn't been canceled
     if (!as_.isActive())
       return;
     
     if(isnan(start_meters_)) {
-        start_meters_ = msg->meters;
+        start_meters_ = motor_speedometer_.meters;
         enable_rc_mode();
     }
     
-    feedback_.distance = msg->meters - start_meters_;
+    feedback_.distance = motor_speedometer_.meters - start_meters_;
 
-    VelocityAndAcceleration setpoint;
-    setpoint.v = goal_.max_v;
-    setpoint.a = 0.0;
-    set_speed(*msg, setpoint);
+    car_msgs::SpeedCommand speed_command;
+    speed_command.header = motor_speedometer_.header;
+    speed_command.acceleration = 0.0;
+
+    bool done = feedback_.distance > goal_.distance;
+
+    
+    speed_command.velocity = done ? 0 : goal_.max_v;
+    speed_command_publisher_.publish(speed_command);
 
     as_.publishFeedback(feedback_);
 
-    if(feedback_.distance > goal_.distance)
+    if(done)
     {
-
-
         disable_rc_mode();
         as_.setSucceeded(result_);
         ROS_INFO("%s: Succeeded", action_name_.c_str());
@@ -157,30 +169,23 @@ public:
     } 
   }
 
-  void set_speed(const car_msgs::Speedometer & motor_speedometer, VelocityAndAcceleration setpoint) {
-        float k_v = 0.3;
-        float k_a = 0.1;
+  void speed_command_callback(const car_msgs::SpeedCommand::ConstPtr& speed_command) {
+    float k_v = 0.3;
+    float k_a = 0.1;
 
-        float lag = 0.15;
-        float speed_ahead = setpoint.v + lag * setpoint.a;
-        float v_error = speed_ahead - motor_speedometer.v_smooth;
-        float a_error = setpoint.a - motor_speedometer.a_smooth;
+    float lag = 0.15;
+    float speed_ahead = speed_command->velocity + lag * speed_command->acceleration;
+    float v_error = speed_ahead - motor_speedometer_.v_smooth;
+    float a_error = speed_command->acceleration - motor_speedometer_.a_smooth;
 
+    esc_us_float += k_v * v_error + k_a * a_error;
+    rc_command.header.stamp = motor_speedometer_.header.stamp;
+    rc_command.esc_us = esc_us_float;
+    rc_command.str_us = 1463; // center steer, TODO: get somewhere else
 
-        esc_us_float += k_v * v_error + k_a * a_error;
-        rc_command.header.stamp = motor_speedometer.header.stamp;
-        rc_command.esc_us = esc_us_float;
-        rc_command.str_us = 1500;
+    rc_command_publisher_.publish(rc_command);
 
-        std_msgs::Float64 setpoint_a_msg, setpoint_v_msg;
-        setpoint_a_msg.data = setpoint.a;
-        setpoint_v_msg.data = setpoint.v;
-
-        setpoint_a_publisher_.publish(setpoint_a_msg);
-        setpoint_v_publisher_.publish(setpoint_v_msg);
-
-        rc_command_publisher_.publish(rc_command);
-    }
+  }
 };
 
 

@@ -48,16 +48,16 @@ public:
     car_msgs::DriveDistanceFeedback feedback_;
     car_msgs::DriveDistanceResult result_;
     ros::Subscriber drive_distance_subscriber_;
-    ros::Subscriber speed_command_subscriber_;
-    ros::Publisher rc_command_publisher_;
     ros::Publisher enable_rc_mode_publisher_;
-    ros::Publisher setpoint_v_publisher_;
-    ros::Publisher setpoint_a_publisher_;
+
     ros::Publisher speed_command_publisher_;
-    car_msgs::RcCommand rc_command;
+    ros::Publisher steer_command_publisher_;
+
+    ros::ServiceClient disable_rc_mode_service_;
+    ros::ServiceClient enable_rc_mode_service_;
+
     car_msgs::Speedometer motor_speedometer_;
 
-    float esc_us_float = 1500;
     
   DriveDistanceAction(std::string name) : 
     as_(node_, name, false),
@@ -69,14 +69,10 @@ public:
 
     //subscribe to the data topic of interest
     drive_distance_subscriber_ = node_.subscribe("car/speedometers/motor", 1, &DriveDistanceAction::speedometer_callback, this);
-    speed_command_subscriber_ = node_.subscribe("car/speed_command", 1, &DriveDistanceAction::speed_command_callback, this);
-    rc_command_publisher_ = node_.advertise<car_msgs::RcCommand>("car/rc_command", 1);
     speed_command_publisher_ = node_.advertise<car_msgs::SpeedCommand>("car/speed_command", 1);
-    setpoint_v_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/v", 1);
-    setpoint_a_publisher_ = node_.advertise<std_msgs::Float64>("driver/setpoint/a", 1);
-
-    // enable_rc_mode_publisher_ = node_.advertise<std_msgs::Bool>("car/enable_rc_mode", 1, true);
-
+    steer_command_publisher_ = node_.advertise<car_msgs::SteerCommand>("car/steer_command", 1);
+    disable_rc_mode_service_ = node_.serviceClient<std_srvs::Trigger>("car/disable_rc_mode");
+    enable_rc_mode_service_ = node_.serviceClient<std_srvs::Trigger>("car/enable_rc_mode");
 
     as_.start();
   }
@@ -86,11 +82,8 @@ public:
   }
 
   void enable_rc_mode() {
-    esc_us_float = 1540;
-
-    ros::ServiceClient client = node_.serviceClient<std_srvs::Trigger>("car/enable_rc_mode");
-    std_srvs::Trigger srv;
-    if (client.call(srv))
+    std_srvs::Trigger trigger;
+    if (enable_rc_mode_service_.call(trigger))
     {
         ROS_INFO("enable rc mode ok");
     }
@@ -101,13 +94,8 @@ public:
   }
 
   void disable_rc_mode() {
-    rc_command.esc_us = 1500;
-    rc_command.str_us = 1500;
-    esc_us_float = 1500;
-    rc_command_publisher_.publish(rc_command);    
-    ros::ServiceClient client = node_.serviceClient<std_srvs::Trigger>("car/disable_rc_mode");
-    std_srvs::Trigger srv;
-    if (client.call(srv))
+    std_srvs::Trigger trigger;
+    if (disable_rc_mode_service_.call(trigger))
     {
         ROS_INFO("enable rc mode ok");
     }
@@ -120,10 +108,10 @@ public:
 
   void goal_callback()
   {
-    ROS_INFO("%s: new goal");
     // accept the new goal
     start_meters_ = NAN;
     goal_ = *(as_.acceptNewGoal());
+    ROS_INFO("%s: new goal", action_name_.c_str());
   }
 
   void preempt_callback()
@@ -158,6 +146,12 @@ public:
     speed_command.velocity = done ? 0 : goal_.max_v;
     speed_command_publisher_.publish(speed_command);
 
+    car_msgs::SteerCommand steer_command;
+    steer_command.header = motor_speedometer_.header;
+    steer_command.curvature = 0;
+    steer_command.curvature_rate = 0;
+    steer_command_publisher_.publish(steer_command);
+
     as_.publishFeedback(feedback_);
 
     if(done)
@@ -169,7 +163,37 @@ public:
     } 
   }
 
+
+};
+
+
+class CarController {
+public:
+  ros::Publisher rc_command_publisher_;
+
+
+  ros::Subscriber speed_command_subscriber_;
+  ros::Subscriber motor_speedometer_subscriber_;
+
+  ros::NodeHandle node_;
+  car_msgs::Speedometer motor_speedometer_;
+
+  float esc_us_float = 1500;
+
+  CarController() {
+    ROS_INFO("enter CarController()");
+    speed_command_subscriber_ = node_.subscribe("car/speed_command", 1, &CarController::speed_command_callback, this);
+    motor_speedometer_subscriber_ = node_.subscribe("car/speedometers/motor", 1, &CarController::motor_speedometer_callback, this);
+    rc_command_publisher_ = node_.advertise<car_msgs::RcCommand>( "car/rc_command", 1);
+    ROS_INFO("exit CarController()");
+  }
+
+  void motor_speedometer_callback(const car_msgs::Speedometer::ConstPtr & motor_speedometer) {
+    motor_speedometer_ = *motor_speedometer;
+  }
+
   void speed_command_callback(const car_msgs::SpeedCommand::ConstPtr& speed_command) {
+    ROS_INFO("speed_command_callback");
     float k_v = 0.3;
     float k_a = 0.1;
 
@@ -179,99 +203,18 @@ public:
     float a_error = speed_command->acceleration - motor_speedometer_.a_smooth;
 
     esc_us_float += k_v * v_error + k_a * a_error;
-    rc_command.header.stamp = motor_speedometer_.header.stamp;
+
+    car_msgs::RcCommand rc_command;
+
+    rc_command.header = speed_command->header;
     rc_command.esc_us = esc_us_float;
     rc_command.str_us = 1463; // center steer, TODO: get somewhere else
 
     rc_command_publisher_.publish(rc_command);
-
   }
+
 };
 
-
-
-
-
-// class Driver {
-//     ros::Subscriber motor_speedometer_sub_;
-//     car_msgs::speedometer motor_speedometer_;
-//     bool speedomoter_ok_ = false;
-//     ros::NodeHandle node_;
-//     ros::Publisher rc_command_publisher_;
-//     ros::Publisher enable_rc_mode_publisher_;
-//     ros::Publisher setpoint_v_publisher_;
-//     ros::Publisher setpoint_a_publisher_;
-//     car_msgs::rc_command rc_command;
-
-// public:
-    
-//     Driver() {
-
-//         ros::ServiceClient client = node_.serviceClient<std_srvs::Trigger>("car/enable_rc_mode");
-//         std_srvs::Trigger srv;
-//         if (client.call(srv))
-//         {
-//             ROS_INFO("enable rc mode ok");
-//         }
-//         else
-//         {
-//             ROS_ERROR("enable rc mode failed");
-//         }
-
-
-//         std_msgs::Bool enable_msg;
-//         enable_msg.data = true;
-//         enable_rc_mode_publisher_.publish(enable_msg);
-
-//         rc_command.str_us = 1500;
-//         rc_command.esc_us = 1500;
-
-//     }
-
-//     ~Driver() {
-//         std_msgs::Bool enable_msg;
-//         enable_msg.data = false;
-//         enable_rc_mode_publisher_.publish(enable_msg);
-//     }
-
-
-
-    
-//     void motor_speedometer_callback_(const car_msgs::speedometer::ConstPtr& motor_speedometer) {
-//         motor_speedometer_ = *motor_speedometer;
-        
-//         // std_msgs::Bool enable_msg;
-//         // enable_msg.data = true;
-//         // enable_rc_mode_publisher_.publish(enable_msg);
-
-
-
-//         float k_v = 0.3;
-//         float k_a = 0.1;
-
-//         float lag = 0.15;
-//         float speed_ahead = setpoint.v + lag * setpoint.a;
-//         float v_error = speed_ahead - motor_speedometer_.v_smooth;
-//         float a_error = setpoint.a - motor_speedometer_.a_smooth;
-
-
-//         static float esc_us_float = 1540;
-
-//         esc_us_float += k_v * v_error + k_a * a_error;
-//         rc_command.header.stamp = motor_speedometer->header.stamp;
-//         rc_command.esc_us = esc_us_float;
-
-//         std_msgs::Float64 setpoint_a_msg, setpoint_v_msg;
-//         setpoint_a_msg.data = setpoint.a;
-//         setpoint_v_msg.data = setpoint.v;
-
-//         setpoint_a_publisher_.publish(setpoint_a_msg);
-//         setpoint_v_publisher_.publish(setpoint_v_msg);
-
-//         rc_command_publisher_.publish(rc_command);
-
-//     }
-// };
 
 int main(int argc, char ** argv) {
     ros::init(argc, argv, "driver");
@@ -279,6 +222,7 @@ int main(int argc, char ** argv) {
     {
         // Driver driver;
         DriveDistanceAction drive_distance_action(ros::this_node::getName());
+        CarController car_controller;
 
 
         ros::Rate rate(100);

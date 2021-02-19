@@ -1,17 +1,19 @@
 {
-  "configurations": [
-    {
-      "browse": {
-        "databaseFilename": "",
-        "limitSymbolsToIncludedHeaders": true
-      },
-      "includePath": [
-        "/root/lidar_ws/devel/include/**",
-        "/opt/ros/melodic/include/**",
-        "/usr/include/**"
-      ],
-      "name": "ROS"
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/root/lidar_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/usr/include/**",
+                "${workspaceFolder}/devel/.private/car_msgs/include"
+            ],
+            "name": "ROS",
+            "compilerPath": "/usr/bin/g++"
+        }
+    ],
+    "version": 4
 }

@@ -143,7 +143,21 @@ public:
     bool done = feedback_.distance > goal_.distance;
 
     
-    speed_command.velocity = done ? 0 : goal_.max_v;
+    speed_command.velocity = 0; // start with zero
+    if(!done) {
+      auto elapsed_secs = msg->header.stamp.toSec() - goal_.header.stamp.toSec();
+      auto ramp_up_v = elapsed_secs * goal_.max_accel;
+      if(ramp_up_v < goal_.max_v) {
+        speed_command.velocity = ramp_up_v;
+        speed_command.acceleration = goal_.max_accel;
+      } else {
+        speed_command.velocity = goal_.max_v;
+        speed_command.acceleration = 0;
+      }
+    }
+
+
+
     speed_command_publisher_.publish(speed_command);
 
     car_msgs::SteerCommand steer_command;
@@ -177,15 +191,14 @@ public:
 
   ros::NodeHandle node_;
   car_msgs::Speedometer motor_speedometer_;
+  car_msgs::SpeedCommand last_speed_command_;
 
   float esc_us_float = 1500;
 
   CarController() {
-    ROS_INFO("enter CarController()");
     speed_command_subscriber_ = node_.subscribe("car/speed_command", 1, &CarController::speed_command_callback, this);
     motor_speedometer_subscriber_ = node_.subscribe("car/speedometers/motor", 1, &CarController::motor_speedometer_callback, this);
     rc_command_publisher_ = node_.advertise<car_msgs::RcCommand>( "car/rc_command", 1);
-    ROS_INFO("exit CarController()");
   }
 
   void motor_speedometer_callback(const car_msgs::Speedometer::ConstPtr & motor_speedometer) {
@@ -194,6 +207,12 @@ public:
 
   void speed_command_callback(const car_msgs::SpeedCommand::ConstPtr& speed_command) {
     ROS_INFO("speed_command_callback");
+
+    // reset if it's been a long time since the last call
+    const float timeout = 0.5;
+    if(abs(speed_command->header.stamp.toSec() - last_speed_command_.header.stamp.toSec()) > timeout) {
+      esc_us_float = 1543;
+    }
     float k_v = 0.3;
     float k_a = 0.1;
 
@@ -211,6 +230,7 @@ public:
     rc_command.str_us = 1463; // center steer, TODO: get somewhere else
 
     rc_command_publisher_.publish(rc_command);
+    last_speed_command_ = *speed_command;
   }
 
 };

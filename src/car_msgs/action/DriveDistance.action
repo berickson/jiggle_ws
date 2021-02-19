@@ -1,5 +1,5 @@
 #goal definition
-#Header header
+Header header
 float32 distance
 float32 max_accel
 float32 max_decel

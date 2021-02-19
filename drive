@@ -2,6 +2,7 @@
 
 # [header.seq header.stamp header.frame_id goal_id.stamp goal_id.id goal.distance goal.max_accel goal.max_decel goal.max_v]
 
-rostopic pub --once driver/goal \
+rostopic pub --once --substitute-keywords \
+  driver/goal \
   car_msgs/DriveDistanceActionGoal \
-  '{goal: {distance: 1.0, max_accel: 1, max_decel: 1, max_v: 0.5}}'
+  '{goal: {header: {stamp: now}, distance: 100.0, max_accel: 1, max_decel: 1, max_v: 2}}'

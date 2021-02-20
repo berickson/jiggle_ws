@@ -112,7 +112,15 @@ public:
     // accept the new goal
     start_meters_ = NAN;
     goal_ = *(as_.acceptNewGoal());
-    ROS_INFO("%s: new goal", action_name_.c_str());
+    ROS_INFO(
+      "%s: new goal. distance: %f  max_v: %f max_accel: %f max_decel: %f", 
+      action_name_.c_str(), 
+      goal_.distance,
+      goal_.max_v,
+      goal_.max_accel,
+      goal_.max_decel
+    );
+
   }
 
   void preempt_callback()
@@ -151,7 +159,7 @@ public:
 // returns velocity at position x with acceleration a, initial velocity v0 and
 // initial position x0
       auto remaining_distance = goal_.distance - feedback_.distance;
-      auto ramp_down_v = velocity_at_position(remaining_distance, goal_.max_accel, 0.0, 0.0);
+      auto ramp_down_v = velocity_at_position(remaining_distance, goal_.max_decel, 0.0, 0.0);
 
       if(ramp_up_v < goal_.max_v && ramp_up_v < ramp_down_v) {
         // ramping up, keep accelerating
@@ -217,7 +225,6 @@ public:
   }
 
   void speed_command_callback(const car_msgs::SpeedCommand::ConstPtr& speed_command) {
-    ROS_INFO("speed_command_callback");
 
     // reset if it's been a long time since the last call
     const float timeout = 0.5;

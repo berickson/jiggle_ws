@@ -10,6 +10,7 @@
 #include "car_msgs/SpeedCommand.h"
 #include "std_srvs/Trigger.h"
 #include "math.h"
+#include "geometry.h"
 
 struct VelocityAndAcceleration{ float v; float a; };
 VelocityAndAcceleration triangle_wave(double t, double amplitude, double period ) {
@@ -147,9 +148,19 @@ public:
     if(!done) {
       auto elapsed_secs = msg->header.stamp.toSec() - goal_.header.stamp.toSec();
       auto ramp_up_v = elapsed_secs * goal_.max_accel;
-      if(ramp_up_v < goal_.max_v) {
+// returns velocity at position x with acceleration a, initial velocity v0 and
+// initial position x0
+      auto remaining_distance = goal_.distance - feedback_.distance;
+      auto ramp_down_v = velocity_at_position(remaining_distance, goal_.max_accel, 0.0, 0.0);
+
+      if(ramp_up_v < goal_.max_v && ramp_up_v < ramp_down_v) {
+        // ramping up, keep accelerating
         speed_command.velocity = ramp_up_v;
         speed_command.acceleration = goal_.max_accel;
+      } else if( ramp_down_v < ramp_up_v && ramp_down_v < goal_.max_v) {
+        // ramping down, deccelerate
+        speed_command.velocity = ramp_down_v;
+        speed_command.acceleration = -abs(acceleration_for_distance_and_velocities(remaining_distance, motor_speedometer_.v_smooth, 0));
       } else {
         speed_command.velocity = goal_.max_v;
         speed_command.acceleration = 0;

@@ -5,8 +5,8 @@ uint32 us
 float32 v_bat
 string mode
 
-int16 rx_str
-int16 rx_esc
+float32 rx_str
+float32 rx_esc
 float32 ax
 float32 ay
 float32 az

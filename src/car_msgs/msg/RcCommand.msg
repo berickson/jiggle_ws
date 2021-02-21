@@ -1,4 +1,4 @@
 Header header
 
-int16 str_us
-int16 esc_us
+float32 str_us
+float32 esc_us

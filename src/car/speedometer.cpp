@@ -41,9 +41,8 @@ car_msgs::Speedometer Speedometer::get_speedometer_message() const
   return m;
 }
 
-double Speedometer::update_from_sensor(unsigned int clock_us, int odo_a, unsigned int a_us, int odo_b, unsigned int b_us) {
-  double last_v = velocity;
-
+double Speedometer::update_from_sensor(unsigned int clock_us, int odo_a, unsigned int a_us, int odo_b, unsigned int b_us) 
+{
   if (a_us != last_a_us) {
     v_a =  (odo_a-last_odo_a)*2*meters_per_tick / (a_us - last_a_us) *1E6;
   } 

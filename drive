@@ -5,4 +5,4 @@
 rostopic pub --once --substitute-keywords \
   driver/goal \
   car_msgs/DriveDistanceActionGoal \
-  '{goal: {header: {stamp: now}, distance: 4.0, max_accel: 0.5, max_decel: 0.2, max_v: 0.75}}'
+  '{goal: {header: {stamp: now}, distance: 100.0, max_accel: 1, max_decel: 0.5, max_v: 5}}'

@@ -65,7 +65,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "dense": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "future": "cpp"
     },
     "ros.distro": "humble"
 }

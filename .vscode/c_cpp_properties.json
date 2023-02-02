@@ -6,10 +6,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "/root/lidar_ws/devel/include/**",
-                "/opt/ros/melodic/include/**",
-                "/usr/include/**",
-                "${workspaceFolder}/devel/.private/car_msgs/include"
+                "/opt/ros/humble/include/**",
+                "/usr/include/**"
             ],
             "name": "ROS",
             "compilerPath": "/usr/bin/g++"

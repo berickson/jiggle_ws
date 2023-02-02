@@ -5,6 +5,7 @@ build_release
 data
 logs
 bags
+log
 logs_release
 deleteme
 install
